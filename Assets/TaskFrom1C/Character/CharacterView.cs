@@ -1,6 +1,8 @@
-﻿namespace TaskFrom1C.Character
+﻿using TaskFrom1C.SceneObjectsStorage;
+
+namespace TaskFrom1C.Character
 {
-    public class CharacterView
+    public class CharacterView : SceneObject
     {
         
     }

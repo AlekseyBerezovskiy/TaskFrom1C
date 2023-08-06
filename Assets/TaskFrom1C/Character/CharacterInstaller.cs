@@ -10,6 +10,10 @@ namespace TaskFrom1C.Character
             Container
                 .Bind<InputController>()
                 .AsSingle();
+
+            Container
+                .Bind<CharacterConfig>()
+                .AsSingle();
         }
     }
 }
