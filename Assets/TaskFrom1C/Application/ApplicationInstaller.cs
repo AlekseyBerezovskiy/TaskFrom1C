@@ -1,3 +1,4 @@
+using TaskFrom1C.Character;
 using TaskFrom1C.SceneObjectsStorage;
 using Zenject;
 
@@ -12,7 +13,9 @@ namespace TaskFrom1C.Application
                 .To<SceneObjectStorage>()
                 .AsSingle();
 
-                Container
+            CharacterInstaller.Install(Container);
+            
+            Container
                 .Bind<ApplicationLauncher>()
                 .AsSingle()
                 .NonLazy();

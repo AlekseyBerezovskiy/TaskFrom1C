@@ -1,5 +1,6 @@
 ﻿using System;
 using TaskFrom1C.Camera;
+using TaskFrom1C.Level;
 using TaskFrom1C.SceneObjectsStorage;
 using TaskFrom1C.UI;
 
@@ -13,6 +14,7 @@ namespace TaskFrom1C.Application.Commands
 
         private const string CameraViewSource = "CameraView";
         private const string CanvasSource = "GameCanvas";
+        private const string LevelViewSource = "LevelView";
         
         public SetupSceneCommand(ISceneObjectStorage sceneObjectStorage)
         {
@@ -25,6 +27,10 @@ namespace TaskFrom1C.Application.Commands
             var gameCanvas = _sceneObjectStorage.CreateFromResourcesAndAdd<GameCanvas>(CanvasSource);
 
             gameCanvas.Canvas.worldCamera = cameraView.Camera;
+
+            _sceneObjectStorage.CreateFromResourcesAndAdd<LevelView>(LevelViewSource);
+            
+            OnDone?.Invoke();
         }
     }
 }

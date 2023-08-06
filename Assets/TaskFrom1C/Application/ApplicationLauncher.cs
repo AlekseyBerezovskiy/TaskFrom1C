@@ -21,6 +21,7 @@ namespace TaskFrom1C.Application
             bootstrap.OnAllCommandsDone += OnEndBootstrap;
             
             bootstrap.AddCommand(_instantiator.Instantiate<SetupSceneCommand>());
+            bootstrap.AddCommand(_instantiator.Instantiate<SetupUICommand>());
             
             bootstrap.StartExecute();
         }
