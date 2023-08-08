@@ -2,7 +2,7 @@
 using TMPro;
 using UnityEngine;
 
-namespace TaskFrom1C.UI.UIHealthBar
+namespace TaskFrom1C.UI
 {
     public class UIHealthBar : SceneObject
     {

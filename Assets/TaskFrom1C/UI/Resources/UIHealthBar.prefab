@@ -87,7 +87,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3274330681322209470}
-  - component: {fileID: 5306451500152387404}
+  - component: {fileID: -8125231851547561490}
   m_Layer: 5
   m_Name: UIHealthBar
   m_TagString: Untagged
@@ -116,7 +116,7 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &5306451500152387404
+--- !u!114 &-8125231851547561490
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
