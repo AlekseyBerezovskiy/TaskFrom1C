@@ -22,7 +22,8 @@ namespace TaskFrom1C.Application
             
             bootstrap.AddCommand(_instantiator.Instantiate<SetupSceneCommand>());
             bootstrap.AddCommand(_instantiator.Instantiate<SetupUICommand>());
-            bootstrap.AddCommand(_instantiator.Instantiate<SetupCharacter>());
+            bootstrap.AddCommand(_instantiator.Instantiate<SetupCharacterCommand>());
+            bootstrap.AddCommand(_instantiator.Instantiate<StartWavesCommand>());
             
             bootstrap.StartExecute();
         }

@@ -1,12 +1,20 @@
-﻿using TaskFrom1C.SceneObjectsStorage;
+﻿using System;
+using TaskFrom1C.SceneObjectsStorage;
 using UnityEngine;
 
 namespace TaskFrom1C.Level
 {
     public class LevelView : SceneObject
     {
-        public Transform[] Spawnpoints => spawnpoints;
+        public SpawnpointData[] SpawnpointDatas => spawnpointDatas;
         
-        [SerializeField] private Transform[] spawnpoints;
+        [SerializeField] private SpawnpointData[] spawnpointDatas;
+    }
+
+    [Serializable]
+    public struct SpawnpointData
+    {
+        public Transform Spawnpoint;
+        public Transform Target;
     }
 }

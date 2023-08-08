@@ -10,11 +10,16 @@ namespace TaskFrom1C.Character
             Container
                 .Bind<InputController>()
                 .AsSingle();
-
+            
             Container
                 .Bind<CharacterConfig>()
                 .FromScriptableObjectResource("CharacterConfig")
                 .AsSingle();
+
+            Container.DeclareSignal<CharacterDamageSignal>();
+            
+            Container.BindSignal<CharacterDamageSignal>()
+                .ToMethod<CharacterController>(x => x.TakeDamage).FromResolve();
         }
     }
 }

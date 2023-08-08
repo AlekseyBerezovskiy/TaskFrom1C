@@ -1,7 +1,6 @@
 ﻿using System;
 using TaskFrom1C.SceneObjectsStorage;
 using TaskFrom1C.UI;
-using TaskFrom1C.UI.UIHealthBar;
 using UnityEngine;
 
 namespace TaskFrom1C.Application.Commands
@@ -13,6 +12,7 @@ namespace TaskFrom1C.Application.Commands
         private readonly ISceneObjectStorage _sceneObjectStorage;
 
         private const string UIHealthBarSource = "UIHealthBar";
+        private const string UIBaseLineSource = "UIBaseLine";
 
         public SetupUICommand(ISceneObjectStorage sceneObjectStorage)
         {
@@ -27,11 +27,21 @@ namespace TaskFrom1C.Application.Commands
                 UIHealthBarSource,
                 canvas.Container);
 
-            var heathBarTransform = healthBar.transform;
-            heathBarTransform.localScale = Vector3.one;
-            heathBarTransform.localPosition = Vector3.zero;
+            ResetLocalPositionAndLocalScale(healthBar.transform);
+            
+            var baseLine = _sceneObjectStorage.CreateFromResourcesAndAdd<UIBaseLine>(
+                UIBaseLineSource,
+                canvas.Container);
+
+            ResetLocalPositionAndLocalScale(baseLine.transform);
             
             OnDone?.Invoke();
+        }
+
+        private void ResetLocalPositionAndLocalScale(Transform transform)
+        {
+            transform.localScale = Vector3.one;
+            transform.localPosition = Vector3.zero;
         }
     }
 }

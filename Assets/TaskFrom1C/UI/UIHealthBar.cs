@@ -8,7 +8,7 @@ namespace TaskFrom1C.UI
     {
         [SerializeField] private TextMeshProUGUI healthText;
 
-        public void SetHealthValue(int health)
+        public void SetHealthValue(float health)
         {
             healthText.SetText(health.ToString());
         }

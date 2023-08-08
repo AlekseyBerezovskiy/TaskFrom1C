@@ -5,13 +5,13 @@ using Zenject;
 
 namespace TaskFrom1C.Application.Commands
 {
-    public class SetupCharacter : ICommand
+    public class SetupCharacterCommand : ICommand
     {
         private readonly ISceneObjectStorage _sceneObjectStorage;
         private readonly IInstantiator _instantiator;
         public event Action OnDone;
 
-        public SetupCharacter(
+        public SetupCharacterCommand(
             ISceneObjectStorage sceneObjectStorage,
             IInstantiator instantiator)
         {
