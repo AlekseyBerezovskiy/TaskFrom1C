@@ -6,11 +6,8 @@ namespace TaskFrom1C.Character.Input
 {
     public class InputController : ITickable
     {
-        public event Action OnLeftArrowPress;
-        public event Action OnRightArrowPress;
-        public event Action OnUpArrowPress;
-        public event Action OnDownArrowPress;
-        
+        public event Action<Vector2> OnMoveButtonClick;
+
         public InputController(TickableManager tickableManager)
         {
             tickableManager.Add(this);
@@ -18,24 +15,24 @@ namespace TaskFrom1C.Character.Input
 
         public void Tick()
         {
-            if (UnityEngine.Input.GetKeyDown(KeyCode.LeftArrow))
+            if (UnityEngine.Input.GetKey(KeyCode.LeftArrow))
             {
-                OnLeftArrowPress?.Invoke();
+                OnMoveButtonClick?.Invoke(Vector2.left);
             }
 
-            if (UnityEngine.Input.GetKeyDown(KeyCode.RightArrow))
+            if (UnityEngine.Input.GetKey(KeyCode.RightArrow))
             {
-                OnRightArrowPress?.Invoke();
+                OnMoveButtonClick?.Invoke(Vector2.right);
             }
 
-            if (UnityEngine.Input.GetKeyDown(KeyCode.UpArrow))
+            if (UnityEngine.Input.GetKey(KeyCode.UpArrow))
             {
-                OnUpArrowPress?.Invoke();
+                OnMoveButtonClick?.Invoke(Vector2.up);
             }
 
-            if (UnityEngine.Input.GetKeyDown(KeyCode.DownArrow))
+            if (UnityEngine.Input.GetKey(KeyCode.DownArrow))
             {
-                OnDownArrowPress?.Invoke();        
+                OnMoveButtonClick?.Invoke(Vector2.down);        
             }
         }
     }

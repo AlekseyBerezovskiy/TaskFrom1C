@@ -13,6 +13,7 @@ namespace TaskFrom1C.Character
 
             Container
                 .Bind<CharacterConfig>()
+                .FromScriptableObjectResource("CharacterConfig")
                 .AsSingle();
         }
     }
