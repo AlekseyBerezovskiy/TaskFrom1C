@@ -13,8 +13,8 @@ namespace TaskFrom1C.Enemy
         public EnemyView View => _view;
         
         private int _currentHealth;
-        
         private Tween _moveTween;
+        private bool _isDeath;
         
         private readonly EnemyView _view;
         private readonly EnemyData _enemyData;
@@ -48,6 +48,13 @@ namespace TaskFrom1C.Enemy
         
         public void Death()
         {
+            if (_isDeath)
+            {
+                return;
+            }
+
+            _isDeath = true;
+            
             _characterController.OnDeath -= Death;
             
             _view.OnTakeBullet -= TakeDamage;
