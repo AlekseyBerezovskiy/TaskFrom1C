@@ -14,7 +14,7 @@ namespace TaskFrom1C.Enemy
     public struct EnemyData
     {
         public float Speed;
-        public float Health;
-        public float Damage;
+        public int Health;
+        public int Damage;
     }
 }

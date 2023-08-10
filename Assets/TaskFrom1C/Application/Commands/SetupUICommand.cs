@@ -1,8 +1,8 @@
 ﻿using System;
+using TaskFrom1C.Character;
 using TaskFrom1C.SceneObjectsStorage;
 using TaskFrom1C.UI;
 using UnityEngine;
-using CharacterController = TaskFrom1C.Character.CharacterController;
 
 namespace TaskFrom1C.Application.Commands
 {
@@ -11,7 +11,7 @@ namespace TaskFrom1C.Application.Commands
         public event Action OnDone;
         
         private readonly ISceneObjectStorage _sceneObjectStorage;
-        private readonly CharacterController _characterController;
+        private readonly ICharacterController _characterController;
 
         private const string UIHealthBarSource = "UIHealthBar";
         private const string UIBaseLineSource = "UIBaseLine";
@@ -19,7 +19,7 @@ namespace TaskFrom1C.Application.Commands
 
         public SetupUICommand(
         ISceneObjectStorage sceneObjectStorage,
-        CharacterController characterController)
+        ICharacterController characterController)
         {
             _sceneObjectStorage = sceneObjectStorage;
             _characterController = characterController;

@@ -1,8 +1,8 @@
 ﻿using DG.Tweening;
+using TaskFrom1C.Character;
 using TaskFrom1C.Level;
 using TaskFrom1C.SceneObjectsStorage;
 using UnityEngine;
-using CharacterController = TaskFrom1C.Character.CharacterController;
 
 namespace TaskFrom1C.Enemy
 {
@@ -11,7 +11,7 @@ namespace TaskFrom1C.Enemy
         private readonly WaveConfig _waveConfig;
         private readonly ISceneObjectStorage _sceneObjectStorage;
         private readonly IEnemyFactory _enemyFactory;
-        private readonly CharacterController _characterController;
+        private readonly ICharacterController _characterController;
         private readonly IEnemyStorage _enemyStorage;
 
         private SpawnpointData[] _spawnpointDatas;
@@ -21,7 +21,7 @@ namespace TaskFrom1C.Enemy
             WaveConfig waveConfig,
             ISceneObjectStorage sceneObjectStorage,
             IEnemyFactory enemyFactory,
-            CharacterController characterController,
+            ICharacterController characterController,
             IEnemyStorage enemyStorage)
         {
             _waveConfig = waveConfig;

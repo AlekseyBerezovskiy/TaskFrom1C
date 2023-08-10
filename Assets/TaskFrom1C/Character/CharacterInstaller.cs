@@ -1,4 +1,5 @@
-﻿using TaskFrom1C.Character.Input;
+﻿using TaskFrom1C.Character.Bullet;
+using TaskFrom1C.Character.Input;
 using Zenject;
 
 namespace TaskFrom1C.Character
@@ -22,7 +23,13 @@ namespace TaskFrom1C.Character
                 .AsSingle();
             
             Container
-                .Bind<CharacterController>()
+                .BindFactory<BulletView, BulletView.Factory>()
+                .FromComponentInNewPrefabResource("BulletView")
+                .UnderTransformGroup("BulletContainer");
+            
+            Container
+                .Bind<ICharacterController>()
+                .To<CharacterController>()
                 .AsSingle();
         }
     }

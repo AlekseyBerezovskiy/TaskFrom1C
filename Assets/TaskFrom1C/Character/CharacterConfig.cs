@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace TaskFrom1C.Character
 {
@@ -6,6 +7,14 @@ namespace TaskFrom1C.Character
     public class CharacterConfig : ScriptableObject
     {
         public float Speed;
-        public float Health;
+        public int Health;
+        public BulletData BulletData;
+    }
+
+    [Serializable]
+    public struct BulletData
+    {
+        public int Damage;
+        public float Speed;
     }
 }

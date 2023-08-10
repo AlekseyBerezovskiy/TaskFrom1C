@@ -13,4 +13,9 @@ MonoBehaviour:
   m_Name: CharacterConfig
   m_EditorClassIdentifier: 
   Speed: 1.2
-  Health: 2
+  Health: 10
+  BulletData:
+    Damage: 1
+    Speed: 3
+    ShootRate: 1
+    ShootDistance: 100

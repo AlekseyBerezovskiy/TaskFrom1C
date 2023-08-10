@@ -1,35 +1,47 @@
 using System;
+using DG.Tweening;
+using TaskFrom1C.Character.Bullet;
 using TaskFrom1C.Character.Input;
 using TaskFrom1C.SceneObjectsStorage;
 using TaskFrom1C.UI;
 using UnityEngine;
+using Zenject;
 using Object = UnityEngine.Object;
 
 namespace TaskFrom1C.Character
 {
-    public class CharacterController
+    public class CharacterController : ICharacterController, IFixedTickable
     {
-        public Action OnDeath;
+        public event Action OnDeath;
         public float CurrentHealth { get; private set; }
         
         private UIHealthBar _uiHealthBar;
+        private bool _isReadyToShoot = true;
         
-        private readonly CharacterView _characterView;
-        private readonly CharacterConfig _characterConfig;
+        private readonly CharacterView _view;
+        private readonly CharacterConfig _config;
         private readonly ISceneObjectStorage _sceneObjectStorage;
-
+        private readonly BulletView.Factory _bulletFactory;
+        
+        private const int PlayerLayerMaskIndex = 3;
+        
         public CharacterController(
-            CharacterView characterView,
-            CharacterConfig characterConfig,
+            CharacterView view,
+            CharacterConfig config,
             InputController inputController,
-            ISceneObjectStorage sceneObjectStorage)
+            ISceneObjectStorage sceneObjectStorage,
+            BulletView.Factory bulletFactory,
+            TickableManager tickableManager)
         {
-            _characterView = characterView;
-            _characterConfig = characterConfig;
+            _view = view;
+            _config = config;
             _sceneObjectStorage = sceneObjectStorage;
+            _bulletFactory = bulletFactory;
 
-            CurrentHealth = _characterConfig.Health;
-
+            CurrentHealth = _config.Health;
+            
+            tickableManager.AddFixed(this);
+            
             inputController.OnMoveButtonClick += Move;
         }
         
@@ -46,19 +58,52 @@ namespace TaskFrom1C.Character
             if (CurrentHealth <= 0)
             {
                 OnDeath?.Invoke();
-                Object.Destroy(_characterView.gameObject);
+                Object.Destroy(_view.gameObject);
+            }
+        }
+        
+        public void FixedTick()
+        {
+            var hit = Physics2D.Raycast(
+                _view.transform.position, 
+                Vector2.up, 
+                _config.BulletData.ShootDistance, 
+                PlayerLayerMaskIndex);
+
+            if (hit.collider != null)
+            {
+                if (hit.collider.gameObject.CompareTag("Enemy"))
+                {
+                    Shoot();
+                }
+            }
+        }
+
+        private void Shoot()
+        {
+            if (_isReadyToShoot)
+            {
+                _isReadyToShoot = false;
+                
+                var bulletView = _bulletFactory.Create();
+                bulletView.transform.position = _view.ShootTransform.position;
+
+                DOVirtual.DelayedCall(_config.BulletData.ShootRate, () =>
+                {
+                    _isReadyToShoot = true;
+                });
             }
         }
 
         private void Move(Vector2 direction)
         {
-            var charTransform = _characterView.transform;
+            var charTransform = _view.transform;
             
             charTransform.position =
                 Vector3.MoveTowards(
                     charTransform.position, 
                     charTransform.position + (Vector3)direction, 
-                    Time.deltaTime * _characterConfig.Speed);
+                    Time.deltaTime * _config.Speed);
         }
     }
 }

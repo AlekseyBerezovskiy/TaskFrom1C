@@ -1,7 +1,7 @@
 ﻿using System;
 using DG.Tweening;
+using TaskFrom1C.Character;
 using UnityEngine;
-using CharacterController = TaskFrom1C.Character.CharacterController;
 using Object = UnityEngine.Object;
 
 namespace TaskFrom1C.Enemy
@@ -11,21 +11,21 @@ namespace TaskFrom1C.Enemy
         public event Action OnDeath;
         public EnemyView View => _view;
         
-        private float _currentHealth;
+        private int _currentHealth;
         
         private Tween _moveTween;
         
         private readonly EnemyView _view;
         private readonly EnemyData _enemyData;
         private readonly Transform _target;
-        private readonly CharacterController _characterController;
+        private readonly ICharacterController _characterController;
         private readonly IEnemyStorage _enemyStorage;
 
         public EnemyController(
             EnemyView enemyView,
             EnemyData enemyData,
             Transform target,
-            CharacterController characterController,
+            ICharacterController characterController,
             IEnemyStorage enemyStorage)
         {
             _enemyData = enemyData;
@@ -52,7 +52,7 @@ namespace TaskFrom1C.Enemy
             _moveTween = _view.transform.DOMoveY(_target.position.y,distance / _enemyData.Speed);
         }
         
-        private void TakeDamage(float damage)
+        private void TakeDamage(int damage)
         {
             _currentHealth -= damage;
 

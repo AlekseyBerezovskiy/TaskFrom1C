@@ -1,5 +1,6 @@
 ﻿using System;
 using TaskFrom1C.Character;
+using TaskFrom1C.Character.Bullet;
 using UnityEngine;
 using Zenject;
 
@@ -7,12 +8,12 @@ namespace TaskFrom1C.Enemy
 {
     public class EnemyView : MonoBehaviour
     {
-        public event Action<float> OnTakeBullet;
+        public event Action<int> OnTakeBullet;
         public event Action OnTouchBaseLine;
 
         private CharacterConfig _characterConfig;
         
-      //  [Inject]
+        [Inject]
         private void Inject(CharacterConfig characterConfig)
         {
             _characterConfig = characterConfig;
@@ -26,7 +27,10 @@ namespace TaskFrom1C.Enemy
             }
             else if (other.CompareTag("Bullet"))
             {
-                OnTakeBullet?.Invoke(_characterConfig.Damage);
+                var bulletView = other.GetComponent<BulletView>();
+                bulletView.Destroy();
+                
+                OnTakeBullet?.Invoke(_characterConfig.BulletData.Damage);
             }
         }
     }
