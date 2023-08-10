@@ -15,5 +15,6 @@ namespace TaskFrom1C.Enemy
     {
         public float Speed;
         public float Health;
+        public float Damage;
     }
 }

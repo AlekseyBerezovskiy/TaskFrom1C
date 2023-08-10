@@ -2,6 +2,7 @@
 using TaskFrom1C.SceneObjectsStorage;
 using TaskFrom1C.UI;
 using UnityEngine;
+using CharacterController = TaskFrom1C.Character.CharacterController;
 
 namespace TaskFrom1C.Application.Commands
 {
@@ -10,13 +11,18 @@ namespace TaskFrom1C.Application.Commands
         public event Action OnDone;
         
         private readonly ISceneObjectStorage _sceneObjectStorage;
+        private readonly CharacterController _characterController;
 
         private const string UIHealthBarSource = "UIHealthBar";
         private const string UIBaseLineSource = "UIBaseLine";
+        private const string UIEndGameWindowSource = "UIEndGameWindow";
 
-        public SetupUICommand(ISceneObjectStorage sceneObjectStorage)
+        public SetupUICommand(
+        ISceneObjectStorage sceneObjectStorage,
+        CharacterController characterController)
         {
             _sceneObjectStorage = sceneObjectStorage;
+            _characterController = characterController;
         }
         
         public void Execute()
@@ -27,6 +33,8 @@ namespace TaskFrom1C.Application.Commands
                 UIHealthBarSource,
                 canvas.Container);
 
+            healthBar.SetHealthValue(_characterController.CurrentHealth);
+
             ResetLocalPositionAndLocalScale(healthBar.transform);
             
             var baseLine = _sceneObjectStorage.CreateFromResourcesAndAdd<UIBaseLine>(
@@ -35,6 +43,18 @@ namespace TaskFrom1C.Application.Commands
 
             ResetLocalPositionAndLocalScale(baseLine.transform);
             
+            var endGameWindow = _sceneObjectStorage.CreateFromResourcesAndAdd<UIEndGameWindow>(
+                UIEndGameWindowSource,
+                canvas.Container);
+
+            ResetLocalPositionAndLocalScale(endGameWindow.transform);
+
+            _characterController.OnDeath += () =>
+            {
+                endGameWindow.SetText(false);
+                endGameWindow.gameObject.SetActive(true);
+            };
+
             OnDone?.Invoke();
         }
 

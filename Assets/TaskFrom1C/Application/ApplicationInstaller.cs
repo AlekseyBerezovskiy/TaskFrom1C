@@ -14,8 +14,6 @@ namespace TaskFrom1C.Application
                 .To<SceneObjectStorage>()
                 .AsSingle();
 
-            SignalBusInstaller.Install(Container);
-            
             EnemyInstaller.Install(Container);
             
             CharacterInstaller.Install(Container);

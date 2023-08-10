@@ -9,22 +9,25 @@ namespace TaskFrom1C.Application.Commands
     {
         private readonly ISceneObjectStorage _sceneObjectStorage;
         private readonly IInstantiator _instantiator;
+        private readonly CharacterView _characterView;
         public event Action OnDone;
 
         public SetupCharacterCommand(
             ISceneObjectStorage sceneObjectStorage,
-            IInstantiator instantiator)
+            IInstantiator instantiator,
+            CharacterView characterView)
         {
             _sceneObjectStorage = sceneObjectStorage;
             _instantiator = instantiator;
+            _characterView = characterView;
         }
         
         public void Execute()
         {
-            var characterView = _sceneObjectStorage.CreateFromResourcesAndAdd<CharacterView>("CharacterView");
+            _instantiator.Instantiate<CharacterController>(new []{_characterView});
             
-            _instantiator.Instantiate<CharacterController>(new []{characterView});
-            
+            _sceneObjectStorage.Add<CharacterView>(_characterView);
+
             OnDone?.Invoke();
         }
     }

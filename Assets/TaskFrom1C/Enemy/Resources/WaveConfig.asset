@@ -16,3 +16,4 @@ MonoBehaviour:
   EnemyData:
     Speed: 1
     Health: 2
+    Damage: 1

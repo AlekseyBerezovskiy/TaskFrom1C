@@ -2,6 +2,7 @@
 using TaskFrom1C.Level;
 using TaskFrom1C.SceneObjectsStorage;
 using UnityEngine;
+using CharacterController = TaskFrom1C.Character.CharacterController;
 
 namespace TaskFrom1C.Enemy
 {
@@ -10,17 +11,23 @@ namespace TaskFrom1C.Enemy
         private readonly WaveConfig _waveConfig;
         private readonly ISceneObjectStorage _sceneObjectStorage;
         private readonly EnemyController.Factory _enemyFactory;
+        private readonly CharacterController _characterController;
 
         private SpawnpointData[] _spawnpointDatas;
+        private Tween _delayTween;
 
         public WaveController(
             WaveConfig waveConfig,
             ISceneObjectStorage sceneObjectStorage,
-            EnemyController.Factory enemyFactory)
+            EnemyController.Factory enemyFactory,
+            CharacterController characterController)
         {
             _waveConfig = waveConfig;
             _sceneObjectStorage = sceneObjectStorage;
             _enemyFactory = enemyFactory;
+            _characterController = characterController;
+
+            _characterController.OnDeath += StopSpawn;
         }
 
         public void StartWave()
@@ -33,7 +40,7 @@ namespace TaskFrom1C.Enemy
         
         private void SpawnEnemy()
         {
-            DOVirtual.DelayedCall(_waveConfig.SpawnsRate, () =>
+            _delayTween = DOVirtual.DelayedCall(_waveConfig.SpawnsRate, () =>
             {
                 var pointIndex = Random.Range(0, _spawnpointDatas.Length);
                 
@@ -46,6 +53,14 @@ namespace TaskFrom1C.Enemy
                 
                 SpawnEnemy();
             });
+        }
+
+        private void StopSpawn()
+        {
+            _characterController.OnDeath -= StopSpawn;
+            
+            _delayTween?.Kill();
+            _delayTween = null;
         }
     }
 }

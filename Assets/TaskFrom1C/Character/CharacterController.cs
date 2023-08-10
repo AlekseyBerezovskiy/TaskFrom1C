@@ -1,19 +1,23 @@
+using System;
 using TaskFrom1C.Character.Input;
 using TaskFrom1C.SceneObjectsStorage;
 using TaskFrom1C.UI;
 using UnityEngine;
-using Zenject;
+using Object = UnityEngine.Object;
 
 namespace TaskFrom1C.Character
 {
-    public class CharacterController 
+    public class CharacterController
     {
+        public Action OnDeath;
+        public float CurrentHealth { get; private set; }
+        
+        private UIHealthBar _uiHealthBar;
+        
         private readonly CharacterView _characterView;
         private readonly CharacterConfig _characterConfig;
-        private readonly UIHealthBar _uiHealthBar;
+        private readonly ISceneObjectStorage _sceneObjectStorage;
 
-        private float _currentHealth;
-        
         public CharacterController(
             CharacterView characterView,
             CharacterConfig characterConfig,
@@ -22,19 +26,27 @@ namespace TaskFrom1C.Character
         {
             _characterView = characterView;
             _characterConfig = characterConfig;
-            _uiHealthBar = sceneObjectStorage.Get<UIHealthBar>();
+            _sceneObjectStorage = sceneObjectStorage;
+
+            CurrentHealth = _characterConfig.Health;
 
             inputController.OnMoveButtonClick += Move;
         }
         
-        public void TakeDamage(CharacterDamageSignal damageSignal)
+        public void TakeDamage(float damage)
         {
-            _currentHealth -= damageSignal.Damage;
-            _uiHealthBar.SetHealthValue(_currentHealth);
-
-            if (_currentHealth <= 0)
+            if (_uiHealthBar == null)
             {
-                Object.Destroy(_characterView);
+                _uiHealthBar = _sceneObjectStorage.Get<UIHealthBar>();
+            }
+            
+            CurrentHealth -= damage;
+            _uiHealthBar.SetHealthValue(CurrentHealth);
+
+            if (CurrentHealth <= 0)
+            {
+                OnDeath?.Invoke();
+                Object.Destroy(_characterView.gameObject);
             }
         }
 
@@ -48,10 +60,5 @@ namespace TaskFrom1C.Character
                     charTransform.position + (Vector3)direction, 
                     Time.deltaTime * _characterConfig.Speed);
         }
-    }
-
-    public class CharacterDamageSignal
-    {
-        public float Damage;
     }
 }

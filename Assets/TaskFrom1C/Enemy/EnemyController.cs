@@ -1,7 +1,7 @@
 ﻿using DG.Tweening;
-using TaskFrom1C.Character;
 using UnityEngine;
 using Zenject;
+using CharacterController = TaskFrom1C.Character.CharacterController;
 
 namespace TaskFrom1C.Enemy
 {
@@ -14,21 +14,23 @@ namespace TaskFrom1C.Enemy
         
         private readonly EnemyData _enemyData;
         private readonly Transform _target;
-        private readonly SignalBus _signalBus;
+        private readonly CharacterController _characterController;
 
         public EnemyController(
             EnemyView view,
             EnemyData enemyData,
             Transform target,
-            SignalBus signalBus)
+            CharacterController characterController)
         {
             View = Object.Instantiate(view);
             
             _enemyData = enemyData;
             _target = target;
-            _signalBus = signalBus;
+            _characterController = characterController;
 
             _currentHealth = _enemyData.Health;
+            
+            _characterController.OnDeath += Death;
             
             View.OnTakeBullet += TakeBullet;
             View.OnTouchBaseLine += TouchBaseLine;
@@ -50,19 +52,21 @@ namespace TaskFrom1C.Enemy
 
         private void TouchBaseLine()
         {
-            _signalBus.Fire(new CharacterDamageSignal {Damage = 1});
             Death();
+            _characterController.TakeDamage(_enemyData.Damage);
         }
 
         private void Death()
         {
+            _characterController.OnDeath -= Death;
+            
             View.OnTakeBullet -= TakeBullet;
             View.OnTouchBaseLine -= TouchBaseLine;
             
             _moveTween?.Kill();
             _moveTween = null;
             
-            Object.Destroy(View);
+            Object.Destroy(View.gameObject);
         }
         
         public class Factory : PlaceholderFactory<EnemyData, Transform, EnemyController>

@@ -13,3 +13,4 @@ MonoBehaviour:
   m_Name: CharacterConfig
   m_EditorClassIdentifier: 
   Speed: 1.2
+  Health: 2

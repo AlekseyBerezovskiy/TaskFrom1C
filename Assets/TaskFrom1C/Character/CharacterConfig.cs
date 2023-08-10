@@ -6,5 +6,6 @@ namespace TaskFrom1C.Character
     public class CharacterConfig : ScriptableObject
     {
         public float Speed;
+        public float Health;
     }
 }
