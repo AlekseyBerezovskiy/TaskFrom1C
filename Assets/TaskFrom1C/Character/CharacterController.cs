@@ -20,6 +20,7 @@ namespace TaskFrom1C.Character
         
         private readonly CharacterView _view;
         private readonly CharacterConfig _config;
+        private readonly InputController _inputController;
         private readonly ISceneObjectStorage _sceneObjectStorage;
         private readonly BulletView.Factory _bulletFactory;
         private readonly TickableManager _tickableManager;
@@ -36,6 +37,7 @@ namespace TaskFrom1C.Character
         {
             _view = view;
             _config = config;
+            _inputController = inputController;
             _sceneObjectStorage = sceneObjectStorage;
             _bulletFactory = bulletFactory;
             _tickableManager = tickableManager;
@@ -44,7 +46,7 @@ namespace TaskFrom1C.Character
             
             _tickableManager.AddFixed(this);
             
-            inputController.OnMoveButtonClick += Move;
+            _inputController.OnMoveButtonClick += Move;
         }
         
         public void TakeDamage(float damage)
@@ -66,6 +68,7 @@ namespace TaskFrom1C.Character
 
         public void Death()
         {
+            _inputController.OnMoveButtonClick -= Move;
             _tickableManager.RemoveFixed(this);
             Object.Destroy(_view.gameObject);
         }

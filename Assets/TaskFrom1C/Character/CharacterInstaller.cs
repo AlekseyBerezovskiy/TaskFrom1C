@@ -6,6 +6,12 @@ namespace TaskFrom1C.Character
 {
     public class CharacterInstaller : Installer<CharacterInstaller>
     {
+        private const string CharacterConfigSource = "CharacterConfig";
+        private const string CharacterViewSource = "CharacterView";
+        private const string BulletViewSource = "BulletView";
+        
+        private const string BulletContainerName = "BulletContainer";
+        
         public override void InstallBindings()
         {
             Container
@@ -14,18 +20,18 @@ namespace TaskFrom1C.Character
             
             Container
                 .Bind<CharacterConfig>()
-                .FromScriptableObjectResource("CharacterConfig")
+                .FromScriptableObjectResource(CharacterConfigSource)
                 .AsSingle();
 
             Container
                 .Bind<CharacterView>()
-                .FromComponentInNewPrefabResource("CharacterView")
+                .FromComponentInNewPrefabResource(CharacterViewSource)
                 .AsSingle();
             
             Container
                 .BindFactory<BulletView, BulletView.Factory>()
-                .FromComponentInNewPrefabResource("BulletView")
-                .UnderTransformGroup("BulletContainer");
+                .FromComponentInNewPrefabResource(BulletViewSource)
+                .UnderTransformGroup(BulletContainerName);
             
             Container
                 .Bind<ICharacterController>()

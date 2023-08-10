@@ -9,17 +9,17 @@ namespace TaskFrom1C.Enemy
 {
     public class WaveController : IWaveController
     {
+        private SpawnpointData[] _spawnpointDatas;
+        private Tween _delayTween;
+        private int _enemyCountToWin;
+        private int _currentDeathEnemy;
+        
         private readonly WaveConfig _waveConfig;
         private readonly ISceneObjectStorage _sceneObjectStorage;
         private readonly IEnemyFactory _enemyFactory;
         private readonly ICharacterController _characterController;
         private readonly IEnemyStorage _enemyStorage;
 
-        private SpawnpointData[] _spawnpointDatas;
-        private Tween _delayTween;
-        private int _enemyCountToWin;
-        private int _currentDeathEnemy;
-        
         public WaveController(
             WaveConfig waveConfig,
             ISceneObjectStorage sceneObjectStorage,
@@ -96,10 +96,15 @@ namespace TaskFrom1C.Enemy
                 
                 StopSpawn();
                 
-                var uiEndGameWindow = _sceneObjectStorage.Get<UIEndGameWindow>();
-                uiEndGameWindow.SetText(false);
-                uiEndGameWindow.gameObject.SetActive(true);
+                ShowEndWindow();
             }
+        }
+
+        private void ShowEndWindow()
+        {
+            var uiEndGameWindow = _sceneObjectStorage.Get<UIEndGameWindow>();
+            uiEndGameWindow.SetText(false);
+            uiEndGameWindow.gameObject.SetActive(true);
         }
     }
 }

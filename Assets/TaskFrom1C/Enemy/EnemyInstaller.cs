@@ -4,11 +4,14 @@ namespace TaskFrom1C.Enemy
 {
     public class EnemyInstaller : Installer<EnemyInstaller>
     {
+        private const string EnemyViewSource = "EnemyView";
+        private const string WaveConfigSource = "WaveConfig";
+        
         public override void InstallBindings()
         {
             Container
                 .Bind<EnemyView>()
-                .FromResources("EnemyView")
+                .FromResources(EnemyViewSource)
                 .AsSingle();
 
             Container
@@ -23,7 +26,7 @@ namespace TaskFrom1C.Enemy
             
             Container
                 .Bind<WaveConfig>()
-                .FromScriptableObjectResource("WaveConfig")
+                .FromScriptableObjectResource(WaveConfigSource)
                 .AsSingle();
 
             Container
