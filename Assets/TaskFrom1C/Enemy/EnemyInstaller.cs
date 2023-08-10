@@ -1,5 +1,4 @@
-﻿using UnityEngine;
-using Zenject;
+﻿using Zenject;
 
 namespace TaskFrom1C.Enemy
 {
@@ -11,9 +10,17 @@ namespace TaskFrom1C.Enemy
                 .Bind<EnemyView>()
                 .FromResources("EnemyView")
                 .AsSingle();
-            
-            Container.BindFactory<EnemyData, Transform, EnemyController, EnemyController.Factory>();
 
+            Container
+                .Bind<IEnemyFactory>()
+                .To<EnemyFactory>()
+                .AsSingle();
+
+            Container
+                .Bind<IEnemyStorage>()
+                .To<EnemyStorage>()
+                .AsSingle();
+            
             Container
                 .Bind<WaveConfig>()
                 .FromScriptableObjectResource("WaveConfig")

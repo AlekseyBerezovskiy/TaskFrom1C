@@ -10,8 +10,9 @@ namespace TaskFrom1C.Enemy
     {
         private readonly WaveConfig _waveConfig;
         private readonly ISceneObjectStorage _sceneObjectStorage;
-        private readonly EnemyController.Factory _enemyFactory;
+        private readonly IEnemyFactory _enemyFactory;
         private readonly CharacterController _characterController;
+        private readonly IEnemyStorage _enemyStorage;
 
         private SpawnpointData[] _spawnpointDatas;
         private Tween _delayTween;
@@ -19,13 +20,15 @@ namespace TaskFrom1C.Enemy
         public WaveController(
             WaveConfig waveConfig,
             ISceneObjectStorage sceneObjectStorage,
-            EnemyController.Factory enemyFactory,
-            CharacterController characterController)
+            IEnemyFactory enemyFactory,
+            CharacterController characterController,
+            IEnemyStorage enemyStorage)
         {
             _waveConfig = waveConfig;
             _sceneObjectStorage = sceneObjectStorage;
             _enemyFactory = enemyFactory;
             _characterController = characterController;
+            _enemyStorage = enemyStorage;
 
             _characterController.OnDeath += StopSpawn;
         }
@@ -43,13 +46,17 @@ namespace TaskFrom1C.Enemy
             _delayTween = DOVirtual.DelayedCall(_waveConfig.SpawnsRate, () =>
             {
                 var pointIndex = Random.Range(0, _spawnpointDatas.Length);
-                
-                var enemyViewTransform = _enemyFactory.Create(
-                    _waveConfig.EnemyData, 
-                    _spawnpointDatas[pointIndex].Target).View.transform;
+
+                var enemyController = 
+                    _enemyFactory
+                        .Create(_spawnpointDatas[pointIndex].Target);
+
+                var enemyViewTransform = enemyController.View.transform;
                 
                 enemyViewTransform.SetParent(_spawnpointDatas[pointIndex].Spawnpoint);
                 enemyViewTransform.localPosition = Vector3.zero;    
+                
+                _enemyStorage.AddEnemy(enemyController);
                 
                 SpawnEnemy();
             });

@@ -1,53 +1,66 @@
-﻿using DG.Tweening;
+﻿using System;
+using DG.Tweening;
 using UnityEngine;
-using Zenject;
 using CharacterController = TaskFrom1C.Character.CharacterController;
+using Object = UnityEngine.Object;
 
 namespace TaskFrom1C.Enemy
 {
     public class EnemyController
     {
-        public EnemyView View { get; }
+        public event Action OnDeath;
+        public EnemyView View => _view;
         
         private float _currentHealth;
+        
         private Tween _moveTween;
         
+        private readonly EnemyView _view;
         private readonly EnemyData _enemyData;
         private readonly Transform _target;
         private readonly CharacterController _characterController;
+        private readonly IEnemyStorage _enemyStorage;
 
         public EnemyController(
-            EnemyView view,
+            EnemyView enemyView,
             EnemyData enemyData,
             Transform target,
-            CharacterController characterController)
+            CharacterController characterController,
+            IEnemyStorage enemyStorage)
         {
-            View = Object.Instantiate(view);
-            
             _enemyData = enemyData;
             _target = target;
             _characterController = characterController;
+            _enemyStorage = enemyStorage;
 
             _currentHealth = _enemyData.Health;
             
             _characterController.OnDeath += Death;
+
+            _view = enemyView;
             
-            View.OnTakeBullet += TakeBullet;
-            View.OnTouchBaseLine += TouchBaseLine;
+            _view.OnTakeBullet += TakeDamage;
+            _view.OnTouchBaseLine += TouchBaseLine;
             
             Move();
         }
 
         private void Move()
         {
-            var distance = Vector3.Distance(View.transform.position, _target.position);
+            var distance = Vector3.Distance(_view.transform.position, _target.position);
             
-            _moveTween = View.transform.DOMoveY(_target.position.y,distance / _enemyData.Speed);
+            _moveTween = _view.transform.DOMoveY(_target.position.y,distance / _enemyData.Speed);
         }
         
-        private void TakeBullet()
+        private void TakeDamage(float damage)
         {
-            
+            _currentHealth -= damage;
+
+            if (_currentHealth <= 0)
+            {
+                OnDeath?.Invoke();
+                Object.Destroy(View.gameObject);
+            }
         }
 
         private void TouchBaseLine()
@@ -60,16 +73,15 @@ namespace TaskFrom1C.Enemy
         {
             _characterController.OnDeath -= Death;
             
-            View.OnTakeBullet -= TakeBullet;
-            View.OnTouchBaseLine -= TouchBaseLine;
+            _view.OnTakeBullet -= TakeDamage;
+            _view.OnTouchBaseLine -= TouchBaseLine;
+
+            _enemyStorage.DeleteEnemy(_view.gameObject.GetInstanceID());
             
             _moveTween?.Kill();
             _moveTween = null;
             
-            Object.Destroy(View.gameObject);
+            Object.Destroy(_view.gameObject);
         }
-        
-        public class Factory : PlaceholderFactory<EnemyData, Transform, EnemyController>
-        { }
     }
 }
