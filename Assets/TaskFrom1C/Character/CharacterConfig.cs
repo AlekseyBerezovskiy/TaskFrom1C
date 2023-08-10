@@ -16,5 +16,7 @@ namespace TaskFrom1C.Character
     {
         public int Damage;
         public float Speed;
+        public float ShootRate;
+        public float ShootDistance;
     }
 }
