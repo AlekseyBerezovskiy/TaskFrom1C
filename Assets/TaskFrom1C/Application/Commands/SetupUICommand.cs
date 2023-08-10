@@ -51,7 +51,7 @@ namespace TaskFrom1C.Application.Commands
 
             _characterController.OnDeath += () =>
             {
-                endGameWindow.SetText(false);
+                endGameWindow.SetText(true);
                 endGameWindow.gameObject.SetActive(true);
             };
 
