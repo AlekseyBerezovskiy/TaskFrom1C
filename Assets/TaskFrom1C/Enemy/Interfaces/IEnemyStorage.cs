@@ -1,9 +1,11 @@
-﻿namespace TaskFrom1C.Enemy
+﻿using System.Collections.Generic;
+
+namespace TaskFrom1C.Enemy
 {
     public interface IEnemyStorage
     {
         void AddEnemy(EnemyController enemyController);
-        EnemyController GetEnemy(int instanceID);
+        List<EnemyController> GetAllEnemy();
         void DeleteEnemy(int instanceID);
     }
 }

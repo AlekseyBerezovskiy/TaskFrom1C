@@ -12,8 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a105ad6df58a450b859b7609c2066ba3, type: 3}
   m_Name: WaveConfig
   m_EditorClassIdentifier: 
-  SpawnsRate: 2
+  MinSpawnsRate: 1
+  MaxSpawnsRate: 2
   EnemyData:
-    Speed: 1
+    MinSpeed: 1
+    MaxSpeed: 1.2
     Health: 2
     Damage: 1
+  MinEnemyToWin: 1
+  MaxEnemyToWin: 5

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace TaskFrom1C.Enemy
@@ -20,15 +21,9 @@ namespace TaskFrom1C.Enemy
             _storage.Add(instanceId, enemyController);
         }
 
-        public EnemyController GetEnemy(int instanceID)
+        public List<EnemyController> GetAllEnemy()
         {
-            if (_storage.ContainsKey(instanceID))
-            {
-                return _storage[instanceID];
-            }
-            
-            Debug.LogError($"Enemy with Id={instanceID} not found!");
-            return null;
+            return _storage.Values.ToList();
         }
 
         public void DeleteEnemy(int instanceID)

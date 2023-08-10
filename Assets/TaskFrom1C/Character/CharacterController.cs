@@ -22,7 +22,8 @@ namespace TaskFrom1C.Character
         private readonly CharacterConfig _config;
         private readonly ISceneObjectStorage _sceneObjectStorage;
         private readonly BulletView.Factory _bulletFactory;
-        
+        private readonly TickableManager _tickableManager;
+
         private const int PlayerLayerMaskIndex = 3;
         
         public CharacterController(
@@ -37,10 +38,11 @@ namespace TaskFrom1C.Character
             _config = config;
             _sceneObjectStorage = sceneObjectStorage;
             _bulletFactory = bulletFactory;
+            _tickableManager = tickableManager;
 
             CurrentHealth = _config.Health;
             
-            tickableManager.AddFixed(this);
+            _tickableManager.AddFixed(this);
             
             inputController.OnMoveButtonClick += Move;
         }
@@ -58,12 +60,23 @@ namespace TaskFrom1C.Character
             if (CurrentHealth <= 0)
             {
                 OnDeath?.Invoke();
-                Object.Destroy(_view.gameObject);
+                Death();
             }
+        }
+
+        public void Death()
+        {
+            _tickableManager.RemoveFixed(this);
+            Object.Destroy(_view.gameObject);
         }
         
         public void FixedTick()
         {
+            if (_view == null)
+            {
+                return;
+            }
+            
             var hit = Physics2D.Raycast(
                 _view.transform.position, 
                 Vector2.up, 
@@ -97,6 +110,11 @@ namespace TaskFrom1C.Character
 
         private void Move(Vector2 direction)
         {
+            if (_view == null)
+            {
+                return;
+            }
+            
             var charTransform = _view.transform;
             
             charTransform.position =

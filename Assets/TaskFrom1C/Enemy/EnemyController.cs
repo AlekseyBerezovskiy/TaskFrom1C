@@ -3,12 +3,13 @@ using DG.Tweening;
 using TaskFrom1C.Character;
 using UnityEngine;
 using Object = UnityEngine.Object;
+using Random = UnityEngine.Random;
 
 namespace TaskFrom1C.Enemy
 {
     public class EnemyController
     {
-        public event Action OnDeath;
+        public event Action OnDeathWithBullets;
         public EnemyView View => _view;
         
         private int _currentHealth;
@@ -44,12 +45,27 @@ namespace TaskFrom1C.Enemy
             
             Move();
         }
+        
+        public void Death()
+        {
+            _characterController.OnDeath -= Death;
+            
+            _view.OnTakeBullet -= TakeDamage;
+            _view.OnTouchBaseLine -= TouchBaseLine;
+
+            _moveTween?.Kill();
+            _moveTween = null;
+            
+            Object.Destroy(_view.gameObject);
+        }
 
         private void Move()
         {
             var distance = Vector3.Distance(_view.transform.position, _target.position);
             
-            _moveTween = _view.transform.DOMoveY(_target.position.y,distance / _enemyData.Speed);
+            _moveTween = _view.transform.DOMoveY(
+                _target.position.y,
+                distance / Random.Range(_enemyData.MinSpeed, _enemyData.MaxSpeed));
         }
         
         private void TakeDamage(int damage)
@@ -58,8 +74,9 @@ namespace TaskFrom1C.Enemy
 
             if (_currentHealth <= 0)
             {
-                OnDeath?.Invoke();
-                Object.Destroy(View.gameObject);
+                OnDeathWithBullets?.Invoke();
+                _enemyStorage.DeleteEnemy(_view.gameObject.GetInstanceID());
+                Death();
             }
         }
 
@@ -67,21 +84,6 @@ namespace TaskFrom1C.Enemy
         {
             Death();
             _characterController.TakeDamage(_enemyData.Damage);
-        }
-
-        private void Death()
-        {
-            _characterController.OnDeath -= Death;
-            
-            _view.OnTakeBullet -= TakeDamage;
-            _view.OnTouchBaseLine -= TouchBaseLine;
-
-            _enemyStorage.DeleteEnemy(_view.gameObject.GetInstanceID());
-            
-            _moveTween?.Kill();
-            _moveTween = null;
-            
-            Object.Destroy(_view.gameObject);
         }
     }
 }

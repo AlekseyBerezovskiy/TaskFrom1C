@@ -7,5 +7,6 @@ namespace TaskFrom1C.Character
         event Action OnDeath;
         float CurrentHealth { get; }
         void TakeDamage(float damage);
+        void Death();
     }
 }
